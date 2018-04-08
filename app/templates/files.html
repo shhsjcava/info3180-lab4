@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style type="text/css">
+  
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-gap:20px;
+ 
+}
+.grid-item {
+  
+  max-width: 100%;
+  max-height:100%;
+    
+ 
+}
+</style>
+{% endblock %}
+
+{% block main %}
+<h1 class="page-header">Photos</h1>
+<br>
+<br>
+{% include 'flash_messages.html' %}
+
+<br>
+<br>
+<div class ='grid-container'>
+  {% for photo in photos %}
+  <div class ='grid-item'>
+    
+  
+  <img src="{{ url_for('static', filename='uploads/' + photo) }}" ></img>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}

@@ -39,12 +39,20 @@ def upload():
         image = form.photo.data
         filename = secure_filename(image.filename)
         image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
         flash('File Saved', 'success')
-        return redirect(url_for('home'))
+        return render_template('home.html')
 
     flash_errors(form)
     return render_template('upload.html', form=form)
 
+def get_uploaded_images():
+    rootdir = os.getcwd()
+    filelist=[]
+    for subdir, dirs, files in os.walk(rootdir + '/app/static/uploads/'):
+        for file in files:
+            filelist.append(os.path.join(subdir, file).split('/')[-1])
+    return filelist
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -59,7 +67,14 @@ def login():
             return redirect(url_for('upload'))
     return render_template('login.html', error=error)
 
-
+@app.route('/files')
+def files():
+    if not session.get('logged_in'):
+        abort(401)
+        
+    photos = get_uploaded_images()
+    return render_template('files.html', photos =photos)
+    
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
